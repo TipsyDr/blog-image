@@ -3,7 +3,9 @@ const fs = require("fs");
 const path = "./photos";
 
 fs.readdir(path, function (err, files) {
+  console.log(2222,2222,222);
   if (err) {
+    console.log(err);
     return;
   }
   let arr = [];
