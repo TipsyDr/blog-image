@@ -56,9 +56,9 @@ async function asyncGetFilesName(path) {
     }
     const coverItem = `{% galleryGroup ${name} 关于${name}的图片 /gallery/${name} https://blog-image-kaix55rgd-tipsydr.vercel.app/image/${name}/${cover} %}`;
     indexData.push(coverItem);
-    fs.writeFile(`../../source/gallery/${name}.md`, getMdFiles(name, urls), (e) => console.log('success'));
+    fs.writeFile(`../source/gallery/${name}.md`, getMdFiles(name, urls), (e) => console.log('success'));
   }
-  fs.writeFile(`../../source/gallery/index.md`, getIndexMdFiles(indexData), (e) => console.log('success'));
+  fs.writeFile(`../source/gallery/index.md`, getIndexMdFiles(indexData), (e) => console.log('success'));
 }
 
 
