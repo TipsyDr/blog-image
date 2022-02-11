@@ -42,6 +42,7 @@ function getFilesName(path) {
 async function asyncGetFilesName(path) {
   let files1 = await getFilesName(path);
   let indexData = '';
+
   for (let i = 0; i < files1.length; i++) {
     const name = files1[i];
     const data = await getFilesName(path + '/' + name);
