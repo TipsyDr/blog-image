@@ -56,7 +56,11 @@ async function asyncGetFilesName(path) {
     }
     const coverItem = `{% galleryGroup ${name} 关于${name}的图片 /gallery/${name} https://blog-image-rosy.vercel.app/image/${name}/${cover} %}`;
     indexData += coverItem;
-    fs.writeFile(`../source/gallery/${name}.md`, getMdFiles(name, urls), (e) => console.log('success'));
+    const mdPath = `../source/gallery/${name}`
+    if (!fs.existsSync(mdPath)) {
+      fs.mkdirSync(mdPath);
+    }
+    fs.writeFile(`${mdPath}/index.md`, getMdFiles(name, urls), (e) => console.log('success'));
   }
   fs.writeFile(`../source/gallery/index.md`, getIndexMdFiles(indexData), (e) => console.log('success'));
 }
