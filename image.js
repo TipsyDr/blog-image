@@ -3,18 +3,32 @@
 const fs = require("fs");
 const path = "./image";
 
-function getMdFiles(name, data) {
+function getMdFiles(name, urls) {
+  const temp =
 `
 ---
 title: ${name}
 ---
 
 {% gallery %}
-![](https://i.loli.net/2019/12/25/Fze9jchtnyJXMHN.jpg)
-${data}
+${urls.toString()}
 {% endgallery %}
 
 `
+  return temp;
+}
+
+function getIndexMdFiles(data) {
+  const temp =
+`
+---
+title: 图库
+---
+
+${data}
+
+`
+  return temp;
 }
 
 function getFilesName(path) {
@@ -27,10 +41,24 @@ function getFilesName(path) {
 
 async function asyncGetFilesName(path) {
   let files1 = await getFilesName(path);
+  const indexData = [];
   for (let i = 0; i < files1.length; i++) {
-    const item = files1[i];
-    fs.writeFile(`../../source/photo/${item}.md`, JSON.stringify(await getFilesName(path + '/' + item), null, "\t"), (e) => console.log(e));
+    const name = files1[i];
+    const data = await getFilesName(path + '/' + name);
+    const urls = [];
+    let cover = '';
+    for (let j = 0; j < data.length; j++) {
+      const item = `![](https://blog-image-kaix55rgd-tipsydr.vercel.app/image/${name}/${data[j]})`;
+      urls.push(item);
+      if (item.indexOf('cover') > 0) {
+        cover = data[i];
+      }
+    }
+    const coverItem = `{% galleryGroup ${name} 关于${name}的图片 /gallery/${name} https://blog-image-kaix55rgd-tipsydr.vercel.app/image/${name}/${cover} %}`;
+    indexData.push(coverItem);
+    fs.writeFile(`../../source/gallery/${name}.md`, getMdFiles(name, urls), (e) => console.log('success'));
   }
+  fs.writeFile(`../../source/gallery/index.md`, getIndexMdFiles(indexData), (e) => console.log('success'));
 }
 
 
