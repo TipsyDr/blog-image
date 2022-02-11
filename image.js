@@ -5,13 +5,13 @@ const path = "./image";
 
 function getMdFiles(name, urls) {
   const temp =
-`
+    `
 ---
 title: ${name}
 ---
 
 {% gallery %}
-${urls.toString()}
+${urls}
 {% endgallery %}
 
 `
@@ -20,7 +20,7 @@ ${urls.toString()}
 
 function getIndexMdFiles(data) {
   const temp =
-`
+    `
 ---
 title: 图库
 ---
@@ -32,7 +32,7 @@ ${data}
 }
 
 function getFilesName(path) {
-  return new Promise(function(resolve, reject) {
+  return new Promise(function (resolve, reject) {
     fs.readdir(path, function (err, res) {
       resolve(res);
     })
@@ -41,21 +41,21 @@ function getFilesName(path) {
 
 async function asyncGetFilesName(path) {
   let files1 = await getFilesName(path);
-  const indexData = [];
+  let indexData = '';
   for (let i = 0; i < files1.length; i++) {
     const name = files1[i];
     const data = await getFilesName(path + '/' + name);
-    const urls = [];
+    let urls = '';
     let cover = '';
     for (let j = 0; j < data.length; j++) {
-      const item = `![](https://blog-image-kaix55rgd-tipsydr.vercel.app/image/${name}/${data[j]})`;
-      urls.push(item);
+      const item = `![](https://blog-image-rosy.vercel.app/image/${name}/${data[j]})`;
+      urls += item;
       if (item.indexOf('cover') > 0) {
         cover = data[i];
       }
     }
-    const coverItem = `{% galleryGroup ${name} 关于${name}的图片 /gallery/${name} https://blog-image-kaix55rgd-tipsydr.vercel.app/image/${name}/${cover} %}`;
-    indexData.push(coverItem);
+    const coverItem = `{% galleryGroup ${name} 关于${name}的图片 /gallery/${name} https://blog-image-rosy.vercel.app/image/${name}/${cover} %}`;
+    indexData += coverItem;
     fs.writeFile(`../source/gallery/${name}.md`, getMdFiles(name, urls), (e) => console.log('success'));
   }
   fs.writeFile(`../source/gallery/index.md`, getIndexMdFiles(indexData), (e) => console.log('success'));
