@@ -1,28 +1,39 @@
 "use strict";
+
 const fs = require("fs");
-const path = "./photos";
+const path = "./image";
 
-fs.readdir(path, function (err, files) {
-  console.log(2222,2222,222);
-  if (err) {
-    console.log(err);
-    return;
-  }
-  let arr = [];
-  (function iterator(index) {
-    if (index == files.length) {
-      fs.writeFile("output.json", JSON.stringify(arr, null, "\t"), (e) => console.log(e));
-      return;
-    }
+function getMdFiles(name, data) {
+`
+---
+title: ${name}
+---
 
-    fs.stat(path + "/" + files[index], function (err, stats) {
-      if (err) {
-        return;
-      }
-      if (stats.isFile()) {
-        arr.push(files[index]);
-      }
-      iterator(index + 1);
+{% gallery %}
+![](https://i.loli.net/2019/12/25/Fze9jchtnyJXMHN.jpg)
+${data}
+{% endgallery %}
+
+`
+}
+
+function getFilesName(path) {
+  return new Promise(function(resolve, reject) {
+    fs.readdir(path, function (err, res) {
+      resolve(res);
     })
-  }(0));
-});
+  })
+}
+
+async function asyncGetFilesName(path) {
+  let files1 = await getFilesName(path);
+  for (let i = 0; i < files1.length; i++) {
+    const item = files1[i];
+    fs.writeFile(`../../source/photo/${item}.md`, JSON.stringify(await getFilesName(path + '/' + item), null, "\t"), (e) => console.log(e));
+  }
+}
+
+
+
+asyncGetFilesName(path);
+
